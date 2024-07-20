@@ -24,7 +24,7 @@ jobs:
         wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
         unzip ngrok-stable-linux-amd64.zip
         sudo mv ngrok /usr/local/bin
-        ngrok authtoken NGROK_AUTH_TOKEN
+        ngrok authtoken 1wvGMn5nLsVNHOBx4PnTxOESB2p_297d3Dm6EXxM8o2uUjuye
 
     - name: Start ngrok
       run: ngrok tcp 3390

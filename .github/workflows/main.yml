@@ -1,0 +1,33 @@
+name: RDP
+
+on: [push]
+
+jobs:
+  rdp:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up Ubuntu Desktop
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y xfce4 xfce4-goodies xorg dbus-x11 x11-xserver-utils
+        sudo apt-get install -y xrdp
+        sudo systemctl enable xrdp
+        sudo systemctl start xrdp
+        sudo adduser rdpuser --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
+        echo "rdpuser:rdppassword" | sudo chpasswd
+        sudo usermod -aG sudo rdpuser
+        echo xfce4-session >~/.xsession
+        sudo systemctl restart xrdp
+
+    - name: Install ngrok
+      run: |
+        wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+        unzip ngrok-stable-linux-amd64.zip
+        sudo mv ngrok /usr/local/bin
+        ngrok authtoken NGROK_AUTH_TOKEN
+
+    - name: Start ngrok
+      run: ngrok tcp 3389
+
+    - name: Display ngrok tunnel info
+      run: curl --silent --show-error http://127.0.0.1:4040/api/tunnels | jq -r '.tunnels[0].public_url'
